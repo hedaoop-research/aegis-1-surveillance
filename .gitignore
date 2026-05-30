@@ -127,3 +127,7 @@ yolo_env/
 
 # Custom large models / downloads if you want to download them at runtime
 # yolov8n.pt
+# Ignore large models and project documents
+*.pt
+*.pdf
+*.docx
