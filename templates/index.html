@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEGIS-1 | MILITARY DRONE SURVEILLANCE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=4">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="hud-container">
+        <!-- Header Section -->
+        <header>
+            <div class="logo">AEGIS-1 SURVEILLANCE SYSTEM</div>
+            <div class="stream-config">
+                <input type="text" id="stream-url" placeholder="Enter Stream URL..." value="{{ current_url }}">
+                <button id="connect-btn">CONNECT</button>
+            </div>
+            <div class="system-status">
+                <a href="/analysis" style="text-decoration: none;">
+                    <button id="analysis-btn">ANALYSIS MODE</button>
+                </a>
+                <span class="status-item">STATUS: <span class="active">OPERATIONAL</span></span>
+                <span class="status-item">LATENCY: <span id="latency">-- ms</span></span>
+                <span class="status-item">FPS: <span id="fps">00</span></span>
+            </div>
+            <div class="timestamp" id="live-clock">00:00:00</div>
+        </header>
+
+        <main>
+            <!-- Left Panel: Live Stream -->
+            <section class="viewport-section">
+                <div class="viewport-header">
+                    <span class="view-label">PRIMARY FEED - ESP32-CAM</span>
+                    <span class="view-id">SRC: 192.168.193.70</span>
+                </div>
+                <div class="video-wrapper">
+                    <img src="{{ url_for('video_feed') }}" alt="Live Feed" id="live-stream">
+                    <div class="overlay-hud">
+                        <div class="crosshair"></div>
+                        <div class="corner-tl"></div>
+                        <div class="corner-tr"></div>
+                        <div class="corner-bl"></div>
+                        <div class="corner-br"></div>
+                        <div class="scanning-bar"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Data and Logs -->
+            <aside class="data-panel">
+                <div class="panel-box threat-analysis">
+                    <h3>THREAT ANALYSIS</h3>
+                    <div class="count-display">
+                        <div class="count-item">
+                            <span class="label">TARGETS DETECTED</span>
+                            <span class="value" id="total-count">0</span>
+                        </div>
+                    </div>
+                    <div class="detection-list" id="detection-list">
+                        <!-- Detection items will appear here -->
+                    </div>
+                </div>
+
+                <div class="panel-box mission-logs">
+                    <h3>MISSION LOGS (MONGODB)</h3>
+                    <div class="logs-container" id="logs">
+                        <div class="log-entry">SYSTEM INITIALIZED...</div>
+                        <div class="log-entry">CONNECTING TO MODELS...</div>
+                        <div class="log-entry">WAITING FOR STREAM...</div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Footer Footer -->
+        <footer>
+            <div class="footer-info">SECTOR: DELTA-7 | DRONE-ID: X-99</div>
+            <div class="warning-text">CLASSIFIED - FOR AUTHORIZED PERSONNEL ONLY</div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // Force Live Mode on page load
+        window.onload = async () => {
+            try {
+                await fetch('/set_mode/live');
+                console.log("Tactical Mode: LIVE ACTIVE");
+            } catch (e) {}
+        };
+    </script>
+</body>
+</html>
